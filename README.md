@@ -1,2 +1,2 @@
 # ubicon
-Room Controller for Daiwa Ubiquitous Computing Research Building
+Room Controller App for Daiwa Ubiquitous Computing Research Building
