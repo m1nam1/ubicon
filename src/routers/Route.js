@@ -10,6 +10,7 @@ const RouterWithRedux = connect()(Router);
 import rootReducer from '../reducers';
 import Home from '../containers/Home';
 import Room from '../containers/Room';
+import DeviceList from '../containers/DeviceList';
 
 /* create store */
 const loggerMiddleware = createLogger();
@@ -34,6 +35,7 @@ export default class Route extends Component {
               <Scene key="a304" component={Room} title="A304" icon={TabIcon} initial />
               <Scene key="a305" component={Room} title="A305" icon={TabIcon} />
             </Scene>
+            <Scene key="device_list" component={DeviceList} title="Device List" />
           </Scene>
         </RouterWithRedux>
       </Provider>
