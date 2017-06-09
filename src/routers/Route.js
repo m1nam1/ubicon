@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform } from 'react-native';
+import { Platform, Text } from 'react-native';
 import { Router, Scene } from 'react-native-router-flux';
 import { connect, Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
@@ -20,14 +20,20 @@ const store = compose(
 
 const isAndroid = Platform.OS === 'android'; // bool
 
+const TabIcon = (props) => (
+  <Text style={{color: props.selected ? "red" :"black"}}>{props.title}</Text>
+);
+
 export default class Route extends Component {
   render() {
     return (
       <Provider store={store}>
         <RouterWithRedux>
           <Scene key="root">
-            <Scene key="home" initial component={Home} title="Ubicon" />
-            <Scene key="room" component={Room} title="Room" />
+            <Scene key="tabbar" tabs={true}>
+              <Scene key="a304" component={Room} title="A304" icon={TabIcon} initial />
+              <Scene key="a305" component={Room} title="A305" icon={TabIcon} />
+            </Scene>
           </Scene>
         </RouterWithRedux>
       </Provider>
