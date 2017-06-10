@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Platform,
   View,
+  StatusBar,
   Text
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -46,6 +47,7 @@ export default class Room extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor="#FFA000" />
         <MainButton onPress={() => console.log('PRESET')}>
           <Text style={styles.btn_txt}>PRESET</Text>
         </MainButton>
