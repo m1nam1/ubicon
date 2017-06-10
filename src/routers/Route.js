@@ -11,6 +11,7 @@ import rootReducer from '../reducers';
 import Home from '../containers/Home';
 import Room from '../containers/Room';
 import DeviceList from '../containers/DeviceList';
+import Device from '../containers/Device';
 
 /* create store */
 const loggerMiddleware = createLogger();
@@ -22,20 +23,21 @@ const store = compose(
 const isAndroid = Platform.OS === 'android'; // bool
 
 const TabIcon = (props) => (
-  <Text style={{color: props.selected ? "red" :"black"}}>{props.title}</Text>
+  <Text style={{color: props.selected ? "red" : "black"}}>{props.title}</Text>
 );
 
 export default class Route extends Component {
   render() {
     return (
       <Provider store={store}>
-        <RouterWithRedux>
+        <RouterWithRedux navigationBarStyle={{backgroundColor: "#FFC107"}} barButtonIconStyle={{tintColor: "black"}}>
           <Scene key="root">
             <Scene key="tabbar" tabs={true}>
               <Scene key="a304" component={Room} title="A304" icon={TabIcon} initial />
               <Scene key="a305" component={Room} title="A305" icon={TabIcon} />
             </Scene>
             <Scene key="device_list" component={DeviceList} title="Device List" />
+            <Scene key="device" component={Device} title="Device" />
           </Scene>
         </RouterWithRedux>
       </Provider>
