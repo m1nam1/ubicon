@@ -47,7 +47,7 @@ class AirConditioner extends Component {
             <DeviceButton onPress={() => Actions.device({title: 'AC-RoomA305-2'})}>
               <Text style={styles.btn_txt}>AC-RoomA305-2</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'H-RoomA304'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'H-RoomA305'})}>
               <Text style={styles.btn_txt}>H-RoomA305</Text>
             </DeviceButton>
           </View>
