@@ -29,25 +29,25 @@ class AirConditioner extends Component {
       <View>
         {this.props.room == 'A304' ? (
           <View style={styles.content}>
-            <DeviceButton onPress={() => Actions.device({title: 'AC-RoomA304-1'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'AC-RoomA304-1', deviceType: 'Air Conditioner', room: this.props.room})}>
               <Text style={styles.btn_txt}>AC-RoomA304-1</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'AC-RoomA304-2'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'AC-RoomA304-2', deviceType: 'Air Conditioner', room: this.props.room})}>
               <Text style={styles.btn_txt}>AC-RoomA304-2</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'H-RoomA304'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'H-RoomA304', deviceType: 'Air Conditioner', room: this.props.room})}>
               <Text style={styles.btn_txt}>H-RoomA304</Text>
             </DeviceButton>
           </View>
         ) : (
           <View style={styles.content}>
-            <DeviceButton onPress={() => Actions.device({title: 'AC-RoomA305-1'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'AC-RoomA305-1', deviceType: 'Air Conditioner', room: this.props.room})}>
               <Text style={styles.btn_txt}>AC-RoomA305-1</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'AC-RoomA305-2'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'AC-RoomA305-2', deviceType: 'Air Conditioner', room: this.props.room})}>
               <Text style={styles.btn_txt}>AC-RoomA305-2</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'H-RoomA305'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'H-RoomA305', deviceType: 'Air Conditioner', room: this.props.room})}>
               <Text style={styles.btn_txt}>H-RoomA305</Text>
             </DeviceButton>
           </View>
@@ -63,37 +63,37 @@ class Light extends Component {
       <View>
         {this.props.room == 'A304' ? (
           <View style={styles.content}>
-            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA304'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA304', deviceType: 'Light', room: this.props.room})}>
               <Text style={styles.btn_txt}>LightRoomA304</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA304-1'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA304-1', deviceType: 'Light', room: this.props.room})}>
               <Text style={styles.btn_txt}>LightRoomA304-1</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA304-2'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA304-2', deviceType: 'Light', room: this.props.room})}>
               <Text style={styles.btn_txt}>LightRoomA304-2</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA304-3'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA304-3', deviceType: 'Light', room: this.props.room})}>
               <Text style={styles.btn_txt}>LightRoomA304-3</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA304-4'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA304-4', deviceType: 'Light', room: this.props.room})}>
               <Text style={styles.btn_txt}>LightRoomA304-4</Text>
             </DeviceButton>
           </View>
         ) : (
           <View style={styles.content}>
-            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA305'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA305', deviceType: 'Light', room: this.props.room})}>
               <Text style={styles.btn_txt}>LightRoomA305</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA305-1'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA305-1', deviceType: 'Light', room: this.props.room})}>
               <Text style={styles.btn_txt}>LightRoomA305-1</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA305-2'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA305-2', deviceType: 'Light', room: this.props.room})}>
               <Text style={styles.btn_txt}>LightRoomA305-2</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA305-3'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA305-3', deviceType: 'Light', room: this.props.room})}>
               <Text style={styles.btn_txt}>LightRoomA305-3</Text>
             </DeviceButton>
-            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA305-4'})}>
+            <DeviceButton onPress={() => Actions.device({title: 'LightRoomA305-4', deviceType: 'Light', room: this.props.room})}>
               <Text style={styles.btn_txt}>LightRoomA305-4</Text>
             </DeviceButton>
           </View>
