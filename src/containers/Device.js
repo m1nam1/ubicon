@@ -47,6 +47,7 @@ class AirConditioner extends Component {
   }
 
   _getData(device_id) {
+    console.info('_getData()');
     const url = `${config.server}/air_conditioners/${device_id}/state`;
     console.log('url:', url);
     return fetch(url, {
@@ -59,7 +60,7 @@ class AirConditioner extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json);
+        console.log('response', json);
         this.setState({
           ac: {
             power: json.power ? true : false,
@@ -75,9 +76,10 @@ class AirConditioner extends Component {
   }
 
   _sendData(data) {
+    console.info('_sendData()');
     const url = `${config.server}/air_conditioners/${data.id}/state`;
     console.log('url:', url);
-    console.log('data', data);
+    console.log('data:', data);
     this.setState({ isLoading: true });
     return fetch(url, {
       method: 'PUT',
@@ -90,7 +92,7 @@ class AirConditioner extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json);
+        console.log('response', json);
         this.setState({ isLoading: false });
         ToastAndroid.show('送信しました', ToastAndroid.SHORT);
         Actions.pop();
@@ -194,14 +196,43 @@ class Light extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      light: { power: true }
+      light: { power: true },
+      isLoading: true
     };
   }
 
+  componentDidMount() {
+    this._getData(config.ucode.light[this.props.room][this.props.deviceName]);
+  }
+
+  _getData(device_id) {
+    console.info('_getData()');
+    const url = `${config.server}/lights/${device_id}/state`;
+    console.log('url:', url);
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+    	  'Content-Type': 'application/json',
+        'X-UIDC-Authorization-Token': config.access_token
+      }
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log('response:', json);
+        this.setState({
+          light: { power: json.power ? true : false },
+          isLoading: false
+        });
+      })
+      .catch(err => console.error(err));
+  }
+
   _sendData(data) {
+    console.info('_sendData()');
     const url = `${config.server}/lights/${data.id}/state`;
     console.log('url:', url);
-    console.log('data', data);
+    console.log('data:', data);
     return fetch(url, {
       method: 'PUT',
       headers: {
@@ -213,14 +244,20 @@ class Light extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json);
+        console.log('response', json);
+        this.setState({ isLoading: false });
+        ToastAndroid.show('送信しました', ToastAndroid.SHORT);
+        Actions.pop();
       })
       .catch(err => console.error(err));
   }
 
   render() {
+    console.log(this.state.light);
     return (
       <View>
+        <ActivityIndicator animating={this.state.isLoading} />
+
         <Text>Power</Text>
         <Switch
           onValueChange={power => this.setState({ light: { power }})}
