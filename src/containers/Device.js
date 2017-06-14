@@ -34,7 +34,7 @@ class AirConditioner extends Component {
     this.state = {
       access_token: '',
       ac: {
-        power: true,
+        power: false,
         set_temp: 25,
         fan_speed: 1,
         fan_direction: 7,
@@ -204,7 +204,7 @@ class Light extends Component {
     super(props);
     this.state = {
       access_token: '',
-      light: { power: true },
+      light: { power: false },
       isLoading: true
     };
   }
