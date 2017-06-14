@@ -5,7 +5,9 @@ import {
   View,
   Text,
   Switch,
-  Picker
+  Picker,
+  ActivityIndicator,
+  ToastAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -33,18 +35,50 @@ class AirConditioner extends Component {
         power: true,
         set_temp: 25,
         fan_speed: 1,
-        fan_direction: 7
+        fan_direction: 7,
+        room_temp: 25
       },
-      light: {
-        power: true
-      }
+      isLoading: true
     };
+  }
+
+  componentDidMount() {
+    this._getData(config.ucode.ac[this.props.room][this.props.deviceName]);
+  }
+
+  _getData(device_id) {
+    const url = `${config.server}/air_conditioners/${device_id}/state`;
+    console.log('url:', url);
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+    	  'Content-Type': 'application/json',
+        'X-UIDC-Authorization-Token': config.access_token
+      }
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        this.setState({
+          ac: {
+            power: json.power ? true : false,
+            set_temp: json.set_temp,
+            fan_speed: json.fan_speed,
+            fan_direction: json.fan_direction,
+            room_temp: json.room_temp
+          },
+          isLoading: false
+        });
+      })
+      .catch(err => console.error(err));
   }
 
   _sendData(data) {
     const url = `${config.server}/air_conditioners/${data.id}/state`;
     console.log('url:', url);
     console.log('data', data);
+    this.setState({ isLoading: true });
     return fetch(url, {
       method: 'PUT',
       headers: {
@@ -57,6 +91,9 @@ class AirConditioner extends Component {
       .then(response => response.json())
       .then(json => {
         console.log(json);
+        this.setState({ isLoading: false });
+        ToastAndroid.show('送信しました', ToastAndroid.SHORT);
+        Actions.pop();
       })
       .catch(err => console.error(err));
   }
@@ -65,13 +102,16 @@ class AirConditioner extends Component {
     console.log(this.state.ac);
     return (
       <View>
+        <ActivityIndicator animating={this.state.isLoading} />
+
         <Text>Power</Text>
         <Switch
           onValueChange={power => this.setState({ ac: {
             power,
             set_temp: this.state.ac.set_temp,
             fan_speed: this.state.ac.fan_speed,
-            fan_direction: this.state.ac.fan_direction
+            fan_direction: this.state.ac.fan_direction,
+            room_temp: this.state.ac.room_temp
           }})}
           value={this.state.ac.power}
         />
@@ -83,7 +123,8 @@ class AirConditioner extends Component {
             power: this.state.ac.power,
             set_temp,
             fan_speed: this.state.ac.fan_speed,
-            fan_direction: this.state.ac.fan_direction
+            fan_direction: this.state.ac.fan_direction,
+            room_temp: this.state.ac.room_temp
           }})}
         >
           <Picker.Item label="20" value={20} />
@@ -104,7 +145,8 @@ class AirConditioner extends Component {
             power: this.state.ac.power,
             set_temp: this.state.ac.set_temp,
             fan_speed,
-            fan_direction: this.state.ac.fan_direction
+            fan_direction: this.state.ac.fan_direction,
+            room_temp: this.state.ac.room_temp
           }})}
         >
           <Picker.Item label="Low" value={0} />
@@ -119,7 +161,8 @@ class AirConditioner extends Component {
             power: this.state.ac.power,
             set_temp: this.state.ac.set_temp,
             fan_speed: this.state.ac.fan_speed,
-            fan_direction
+            fan_direction,
+            room_temp: this.state.ac.room_temp
           }})}
         >
           <Picker.Item label="Position-0" value={0} />
@@ -139,7 +182,7 @@ class AirConditioner extends Component {
             fan_direction: this.state.ac.fan_direction
           };
           this._sendData(data);
-        }}>
+        }} enabled={!this.state.isLoading}>
           <Text style={styles.btn_txt}>Send</Text>
         </SendButton>
       </View>
@@ -148,12 +191,49 @@ class AirConditioner extends Component {
 }
 
 class Light extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      light: { power: true }
+    };
+  }
+
+  _sendData(data) {
+    const url = `${config.server}/lights/${data.id}/state`;
+    console.log('url:', url);
+    console.log('data', data);
+    return fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+    	  'Content-Type': 'application/json',
+        'X-UIDC-Authorization-Token': config.access_token
+      },
+      body: JSON.stringify({ ...data })
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
     return (
       <View>
         <Text>Power</Text>
+        <Switch
+          onValueChange={power => this.setState({ light: { power }})}
+          value={this.state.light.power}
+        />
 
-        <SendButton onPress={() => {console.log('Send')}}>
+        <SendButton onPress={() => {
+          const data = {
+            id: config.ucode.light[this.props.room][this.props.deviceName],
+            power: this.state.light.power ? 1 : 0
+          };
+          this._sendData(data);
+        }}>
           <Text style={styles.btn_txt}>Send</Text>
         </SendButton>
       </View>
