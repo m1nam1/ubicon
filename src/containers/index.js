@@ -20,7 +20,7 @@ export default class Ubicon extends Component {
       headers: {
         'Accept': 'application/json',
     	  'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(`${config.auth.email}:${config.auth.password}`),
+        'Authorization': `Basic ${config.auth.base64}`,
       },
       body: JSON.stringify({ email: config.auth.email })
     })
