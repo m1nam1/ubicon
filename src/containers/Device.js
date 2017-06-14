@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  AsyncStorage,
   StyleSheet,
   Platform,
   View,
@@ -31,6 +32,7 @@ class AirConditioner extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      access_token: '',
       ac: {
         power: true,
         set_temp: 25,
@@ -43,20 +45,30 @@ class AirConditioner extends Component {
   }
 
   componentDidMount() {
-    this._getData(config.ucode.ac[this.props.room][this.props.deviceName]);
+    this._getToken()
+      .then(access_token => {
+        this._getData(access_token, config.ucode.ac[this.props.room][this.props.deviceName]);
+        this.setState({ access_token });
+      });
   }
 
-  _getData(device_id) {
+  async _getToken() {
+    console.info('_getToken()');
+    try {
+      return await AsyncStorage.getItem('AccessToken');
+    } catch (err) {
+      console.log('Error retrieving data:', err);
+      if (isAndroid) ToastAndroid.show('access token を取得できませんでした', ToastAndroid.SHORT);
+    }
+  }
+
+  _getData(access_token, device_id) {
     console.info('_getData()');
     const url = `${config.server}/air_conditioners/${device_id}/state`;
     console.log('url:', url);
     return fetch(url, {
       method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-    	  'Content-Type': 'application/json',
-        'X-UIDC-Authorization-Token': config.access_token
-      }
+      headers: { 'X-UIDC-Authorization-Token': access_token }
     })
       .then(response => response.json())
       .then(json => {
@@ -83,25 +95,20 @@ class AirConditioner extends Component {
     this.setState({ isLoading: true });
     return fetch(url, {
       method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-    	  'Content-Type': 'application/json',
-        'X-UIDC-Authorization-Token': config.access_token
-      },
+      headers: { 'X-UIDC-Authorization-Token': this.state.access_token },
       body: JSON.stringify({ ...data })
     })
       .then(response => response.json())
       .then(json => {
         console.log('response', json);
         this.setState({ isLoading: false });
-        ToastAndroid.show('送信しました', ToastAndroid.SHORT);
+        if (isAndroid) ToastAndroid.show('送信しました', ToastAndroid.SHORT);
         Actions.pop();
       })
       .catch(err => console.error(err));
   }
 
   render() {
-    console.log(this.state.ac);
     return (
       <View>
         <ActivityIndicator animating={this.state.isLoading} />
@@ -196,26 +203,37 @@ class Light extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      access_token: '',
       light: { power: true },
       isLoading: true
     };
   }
 
   componentDidMount() {
-    this._getData(config.ucode.light[this.props.room][this.props.deviceName]);
+    this._getToken()
+      .then(access_token => {
+        this._getData(access_token, config.ucode.light[this.props.room][this.props.deviceName]);
+        this.setState({ access_token });
+      });
   }
 
-  _getData(device_id) {
+  async _getToken() {
+    console.info('_getToken()');
+    try {
+      return await AsyncStorage.getItem('AccessToken');
+    } catch (err) {
+      console.log('Error retrieving data:', err);
+      if (isAndroid) ToastAndroid.show('access token を取得できませんでした', ToastAndroid.SHORT);
+    }
+  }
+
+  _getData(access_token, device_id) {
     console.info('_getData()');
     const url = `${config.server}/lights/${device_id}/state`;
     console.log('url:', url);
     return fetch(url, {
       method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-    	  'Content-Type': 'application/json',
-        'X-UIDC-Authorization-Token': config.access_token
-      }
+      headers: { 'X-UIDC-Authorization-Token': access_token }
     })
       .then(response => response.json())
       .then(json => {
@@ -235,25 +253,20 @@ class Light extends Component {
     console.log('data:', data);
     return fetch(url, {
       method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-    	  'Content-Type': 'application/json',
-        'X-UIDC-Authorization-Token': config.access_token
-      },
+      headers: { 'X-UIDC-Authorization-Token': this.state.access_token },
       body: JSON.stringify({ ...data })
     })
       .then(response => response.json())
       .then(json => {
         console.log('response', json);
         this.setState({ isLoading: false });
-        ToastAndroid.show('送信しました', ToastAndroid.SHORT);
+        if (isAndroid) ToastAndroid.show('送信しました', ToastAndroid.SHORT);
         Actions.pop();
       })
       .catch(err => console.error(err));
   }
 
   render() {
-    console.log(this.state.light);
     return (
       <View>
         <ActivityIndicator animating={this.state.isLoading} />

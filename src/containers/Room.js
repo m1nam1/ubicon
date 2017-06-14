@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import {
+  AsyncStorage,
   StyleSheet,
   Platform,
   View,
   StatusBar,
-  Text
+  Text,
+  Alert
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -25,38 +27,53 @@ const MainButton = MKButton.coloredButton()
   })
   .build();
 
+const AccentButton = MKButton.accentColoredButton()
+  .withBackgroundColor(MKColor.LightGreen)
+  .withStyle({
+    width: 200,
+    height: 70,
+    borderRadius: 5,
+    margin: 10
+  })
+  .build();
+
 export default class Room extends Component {
-  _getRoomDevices() {
-    const ucode = this.props.title == 'A304'
-      ? config.ucode.room.A304
-      : config.ucode.room.A305;
-    const url = `${config.server}/rooms/${ucode}/attribute/`;
-    console.log(url);
-    return fetch(url, {
-        method: 'GET',
-        headers: { 'X-UIDC-Authorization-Token': config.access_token }
-    })
-      .then(response => {
-          if (!response.ok) throw Error(response.statusText);
-          return response.json();
-      })
-      .then(json => console.log(json))
-      .catch(err => console.error(err));
+  // TODO: implement
+  _preset() {
+    console.info('_preset()');
+    Alert.alert(
+      'Preset',
+      'この部屋のプリセットを適用しますか？',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ]
+    )
+  }
+
+  // TODO: implement
+  _allOff() {
+    console.info('_allOff()');
+    Alert.alert(
+      'All OFF',
+      'この部屋の全てのエアコンと電気の電源をオフにしますか？',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ]
+    )
   }
 
   render() {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#FFA000" />
-        <MainButton onPress={() => console.log('PRESET')}>
-          <Text style={styles.btn_txt}>PRESET</Text>
-        </MainButton>
-        <MainButton onPress={() => console.log('All OFF')}>
-          <Text style={styles.btn_txt}>ALL OFF</Text>
-        </MainButton>
-        <MainButton onPress={() => this._getRoomDevices()}>
-          <Text style={styles.btn_txt}>Fetch Device List</Text>
-        </MainButton>
+        <AccentButton onPress={() => this._preset()}>
+          <Text style={styles.btn_txt}>Preset</Text>
+        </AccentButton>
+        <AccentButton onPress={() => this._allOff()}>
+          <Text style={styles.btn_txt}>All OFF</Text>
+        </AccentButton>
         <MainButton onPress={() => Actions.device_list({title: 'Air Conditioner', room: this.props.title})}>
           <Text style={styles.btn_txt}>Air Conditioner</Text>
         </MainButton>
