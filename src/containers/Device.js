@@ -42,9 +42,7 @@ class AirConditioner extends Component {
       },
       isLoading: true
     };
-  }
 
-  componentDidMount() {
     this._getToken()
       .then(access_token => {
         this._getData(access_token, config.ucode.ac[this.props.room][this.props.deviceName]);
@@ -207,9 +205,7 @@ class Light extends Component {
       light: { power: false },
       isLoading: true
     };
-  }
 
-  componentDidMount() {
     this._getToken()
       .then(access_token => {
         this._getData(access_token, config.ucode.light[this.props.room][this.props.deviceName]);
