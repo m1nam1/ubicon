@@ -49,15 +49,43 @@ export default class Room extends Component {
     }
   }
 
-  // TODO: implement
-  _preset() {
-    console.info('_preset()');
+  /**
+   * 指定された部屋のプリセット設定を適用
+   * @param {string} room_name 指定する部屋名
+   */
+  _preset(room_name) {
+    console.info(`_preset(room_name="${room_name}")`);
     Alert.alert(
       'Preset',
       'この部屋のプリセットを適用しますか？',
       [
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
+        {text: 'Cancel', onPress: () => console.log('Canceled'), style: 'cancel'},
+        {text: 'OK', onPress: () => {
+          const presets = config.preset[room_name];
+          this._getToken().then(access_token => {
+            /* Air Conditioner */
+            for (var device_name in presets.ac) {
+              if (presets.ac.hasOwnProperty(device_name)) {
+                const preset = presets.ac[device_name];
+                console.log(`preset[${device_name}]:`, preset);
+                const device_id = config.ucode.ac[room_name][device_name];
+                preset['id'] = device_id; // add device_id into preset
+                this._sendData('air_conditioners', preset, access_token);
+              }
+            }
+
+            /* Light */
+            for (var device_name in presets.light) {
+              if (presets.light.hasOwnProperty(device_name)) {
+                const preset = presets.light[device_name];
+                console.log(`preset[${device_name}]:`, preset);
+                const device_id = config.ucode.light[room_name][device_name];
+                const is_power = preset.power === 1 ? true : false;
+                this._powerSwitch('lights', device_id, is_power, access_token);
+              }
+            }
+          });
+        }},
       ]
     );
   }
@@ -67,10 +95,10 @@ export default class Room extends Component {
    * @param {string} room_name 指定する部屋名
    */
   _allOff(room_name) {
-    console.info('_allOff()');
+    console.info(`_allOff(room_name="${room_name}")`);
     Alert.alert(
       'All OFF',
-      'この部屋の全てのエアコンと電気の電源をオフにしますか？',
+      'この部屋の全ての電気とエアコンの電源をオフにしますか？',
       [
         {text: 'Cancel', onPress: () => console.log('Canceled'), style: 'cancel'},
         {text: 'OK', onPress: () => {
@@ -100,6 +128,34 @@ export default class Room extends Component {
         }}
       ]
     );
+  }
+
+  /**
+   * デバイスにデータを送信
+   * @param {string} device_type 指定するデバイスの種類
+   * @param {object} data 送信するデータ
+   * @param {string} access_token アクセストークン
+   */
+  _sendData(device_type, data, access_token) {
+    console.info('_sendData()');
+    const url = `${config.server}/${device_type}/${data.id}/state`;
+    console.log('url:', url);
+    console.log('data:', data);
+    return fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-UIDC-Authorization-Token': access_token
+      },
+      body: JSON.stringify({ ...data })
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log('response', json);
+        if (isAndroid) ToastAndroid.show('送信しました', ToastAndroid.SHORT);
+      })
+      .catch(err => console.error(err));
   }
 
   /**
@@ -133,7 +189,7 @@ export default class Room extends Component {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#FFA000" />
-        <AccentButton onPress={() => this._preset()}>
+        <AccentButton onPress={() => this._preset(this.props.title)}>
           <Text style={styles.btn_txt}>Preset</Text>
         </AccentButton>
         <AccentButton onPress={() => this._allOff(this.props.title)}>
