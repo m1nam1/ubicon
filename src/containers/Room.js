@@ -64,7 +64,7 @@ export default class Room extends Component {
 
   /**
    * 指定された部屋の全デバイスの電源を切る
-   * @param {string} room_name - 指定する部屋名
+   * @param {string} room_name 指定する部屋名
    */
   _allOff(room_name) {
     console.info('_allOff()');
@@ -83,13 +83,13 @@ export default class Room extends Component {
                   for (let key in device_list) {
                     if (device_list.hasOwnProperty(key)) {
                       const device_id = device_list[key];
-                      this._powerOff('air_conditioners', device_id, access_token);
+                      this._powerSwitch('air_conditioners', device_id, false, access_token);
                     }
                   }
                   break;
                 case 'Light':
                   const device_id = config.ucode.light[room_name][`LightRoom${room_name}`];
-                  this._powerOff('lights', device_id, access_token);
+                  this._powerSwitch('lights', device_id, false, access_token);
                   break;
                 default:
                   console.error('Undefined device type:', device_type);
@@ -103,16 +103,17 @@ export default class Room extends Component {
   }
 
   /**
-   * 指定されたデバイスの電源を切る
-   * @param {string} device_type - 指定するデバイスの種類
-   * @param {string} device_id - 指定するデバイスのID
-   * @param {string} access_token - アクセストークン
+   * 指定されたデバイスの電源を操作
+   * @param {string} device_type 指定するデバイスの種類
+   * @param {string} device_id 指定するデバイスのID
+   * @param {bool} power true: on, false: off
+   * @param {string} access_token アクセストークン
    */
-  _powerOff(device_type, device_id, access_token) {
-    console.info(`_powerOff(${device_id})`);
+  _powerSwitch(device_type, device_id, power, access_token) {
+    console.info(`_powerSwitch(device_id="${device_id}", power=${power})`);
     const url = `${config.server}/${device_type}/${device_id}/state`;
     console.log('url:', url);
-    const data = { id: device_id, power: 0 };
+    const data = { id: device_id, power: power ? 1 : 0 };
     console.log('data:', data);
     return fetch(url, {
       method: 'PUT',
@@ -138,6 +139,7 @@ export default class Room extends Component {
         <AccentButton onPress={() => this._allOff(this.props.title)}>
           <Text style={styles.btn_txt}>All OFF</Text>
         </AccentButton>
+        <View style={{ marginBottom: 15 }}></View>
         <DeviceButton onPress={() => Actions.device_list({title: 'Air Conditioner', room: this.props.title})}>
           <Text style={styles.btn_txt}>Air Conditioner</Text>
         </DeviceButton>

@@ -11,6 +11,9 @@ export default class Ubicon extends Component {
     this._authentication();
   }
 
+  /**
+   * Basic認証を行ってアクセストークンを取得
+   */
   _authentication() {
     console.info('_authentication()');
     const url = `${config.server}/auth/token`;
@@ -32,6 +35,10 @@ export default class Ubicon extends Component {
       .catch(err => console.error(err));
   }
 
+  /**
+   * アクセストークンを AsyncStorage にセット
+   * @param {string} access_token アクセストークン
+   */
   async _setToken(access_token) {
     console.info('_setToken()');
     try {

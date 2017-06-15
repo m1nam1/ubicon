@@ -59,8 +59,8 @@ class AirConditioner extends Component {
 
   /**
    * デバイスのデータを取得
-   * @param {string} device_id - 指定するデバイスのID
-   * @param {string} access_token - アクセストークン
+   * @param {string} device_id 指定するデバイスのID
+   * @param {string} access_token アクセストークン
    */
   _getData(device_id, access_token) {
     console.info('_getData()');
@@ -93,8 +93,8 @@ class AirConditioner extends Component {
 
   /**
    * デバイスにデータを送信
-   * @param {object} data - 送信するデータ
-   * @param {string} access_token - アクセストークン
+   * @param {object} data 送信するデータ
+   * @param {string} access_token アクセストークン
    */
   _sendData(data, access_token) {
     console.info('_sendData()');
@@ -238,8 +238,8 @@ class Light extends Component {
 
   /**
    * デバイスのデータを取得
-   * @param {string} device_id - 指定するデバイスのID
-   * @param {string} access_token - アクセストークン
+   * @param {string} device_id 指定するデバイスのID
+   * @param {string} access_token アクセストークン
    */
   _getData(device_id, access_token) {
     console.info('_getData()');
@@ -266,8 +266,8 @@ class Light extends Component {
 
   /**
    * デバイスのデータを取得
-   * @param {string} device_id - 指定するデバイスのID
-   * @param {string} access_token - アクセストークン
+   * @param {string} device_id 指定するデバイスのID
+   * @param {string} access_token アクセストークン
    */
   _sendData(data, access_token) {
     console.info('_sendData()');
