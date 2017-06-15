@@ -32,7 +32,6 @@ class AirConditioner extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      access_token: '',
       ac: {
         power: false,
         set_temp: 25,
@@ -42,14 +41,12 @@ class AirConditioner extends Component {
       },
       isLoading: true
     };
-
-    this._getToken()
-      .then(access_token => {
-        this._getData(access_token, config.ucode.ac[this.props.room][this.props.deviceName]);
-        this.setState({ access_token });
-      });
+    this._getToken().then(access_token => this._getData(config.ucode.ac[this.props.room][this.props.deviceName], access_token));
   }
 
+  /**
+   * AsyncStorageからアクセストークンを取得
+   */
   async _getToken() {
     console.info('_getToken()');
     try {
@@ -60,7 +57,12 @@ class AirConditioner extends Component {
     }
   }
 
-  _getData(access_token, device_id) {
+  /**
+   * デバイスのデータを取得
+   * @param {string} device_id - 指定するデバイスのID
+   * @param {string} access_token - アクセストークン
+   */
+  _getData(device_id, access_token) {
     console.info('_getData()');
     const url = `${config.server}/air_conditioners/${device_id}/state`;
     console.log('url:', url);
@@ -89,7 +91,12 @@ class AirConditioner extends Component {
       .catch(err => console.error(err));
   }
 
-  _sendData(data) {
+  /**
+   * デバイスにデータを送信
+   * @param {object} data - 送信するデータ
+   * @param {string} access_token - アクセストークン
+   */
+  _sendData(data, access_token) {
     console.info('_sendData()');
     const url = `${config.server}/air_conditioners/${data.id}/state`;
     console.log('url:', url);
@@ -100,7 +107,7 @@ class AirConditioner extends Component {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-UIDC-Authorization-Token': this.state.access_token
+        'X-UIDC-Authorization-Token': access_token
       },
       body: JSON.stringify({ ...data })
     })
@@ -197,7 +204,7 @@ class AirConditioner extends Component {
             fan_speed: this.state.ac.fan_speed,
             fan_direction: this.state.ac.fan_direction
           };
-          this._sendData(data);
+          this._getToken().then(access_token => this._sendData(data, access_token));
         }} enabled={!this.state.isLoading}>
           <Text style={styles.btn_txt}>Send</Text>
         </SendButton>
@@ -210,18 +217,15 @@ class Light extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      access_token: '',
       light: { power: false },
       isLoading: true
     };
-
-    this._getToken()
-      .then(access_token => {
-        this._getData(access_token, config.ucode.light[this.props.room][this.props.deviceName]);
-        this.setState({ access_token });
-      });
+    this._getToken().then(access_token => this._getData(config.ucode.light[this.props.room][this.props.deviceName], access_token));
   }
 
+  /**
+   * AsyncStorageからアクセストークンを取得
+   */
   async _getToken() {
     console.info('_getToken()');
     try {
@@ -232,7 +236,12 @@ class Light extends Component {
     }
   }
 
-  _getData(access_token, device_id) {
+  /**
+   * デバイスのデータを取得
+   * @param {string} device_id - 指定するデバイスのID
+   * @param {string} access_token - アクセストークン
+   */
+  _getData(device_id, access_token) {
     console.info('_getData()');
     const url = `${config.server}/lights/${device_id}/state`;
     console.log('url:', url);
@@ -255,7 +264,12 @@ class Light extends Component {
       .catch(err => console.error(err));
   }
 
-  _sendData(data) {
+  /**
+   * デバイスのデータを取得
+   * @param {string} device_id - 指定するデバイスのID
+   * @param {string} access_token - アクセストークン
+   */
+  _sendData(data, access_token) {
     console.info('_sendData()');
     const url = `${config.server}/lights/${data.id}/state`;
     console.log('url:', url);
@@ -265,7 +279,7 @@ class Light extends Component {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'X-UIDC-Authorization-Token': this.state.access_token
+        'X-UIDC-Authorization-Token': access_token
       },
       body: JSON.stringify({ ...data })
     })
@@ -296,7 +310,7 @@ class Light extends Component {
             id: config.ucode.light[this.props.room][this.props.deviceName],
             power: this.state.light.power ? 1 : 0
           };
-          this._sendData(data);
+          this._getToken().then(access_token => this._sendData(data, access_token));
         }}>
           <Text style={styles.btn_txt}>Send</Text>
         </SendButton>
