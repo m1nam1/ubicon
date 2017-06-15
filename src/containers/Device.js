@@ -66,14 +66,18 @@ class AirConditioner extends Component {
     console.log('url:', url);
     return fetch(url, {
       method: 'GET',
-      headers: { 'X-UIDC-Authorization-Token': access_token }
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-UIDC-Authorization-Token': access_token
+      }
     })
       .then(response => response.json())
       .then(json => {
         console.log('response', json);
         this.setState({
           ac: {
-            power: json.power ? true : false,
+            power: json.power === 1 ? true : false,
             set_temp: json.set_temp,
             fan_speed: json.fan_speed,
             fan_direction: json.fan_direction,
@@ -93,7 +97,11 @@ class AirConditioner extends Component {
     this.setState({ isLoading: true });
     return fetch(url, {
       method: 'PUT',
-      headers: { 'X-UIDC-Authorization-Token': this.state.access_token },
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-UIDC-Authorization-Token': this.state.access_token
+      },
       body: JSON.stringify({ ...data })
     })
       .then(response => response.json())
@@ -107,6 +115,7 @@ class AirConditioner extends Component {
   }
 
   render() {
+    console.log('state:', this.state);
     return (
       <View>
         <ActivityIndicator animating={this.state.isLoading} />
@@ -229,13 +238,17 @@ class Light extends Component {
     console.log('url:', url);
     return fetch(url, {
       method: 'GET',
-      headers: { 'X-UIDC-Authorization-Token': access_token }
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-UIDC-Authorization-Token': access_token
+      }
     })
       .then(response => response.json())
       .then(json => {
         console.log('response:', json);
         this.setState({
-          light: { power: json.power ? true : false },
+          light: { power: json.power === 1 ? true : false },
           isLoading: false
         });
       })
@@ -249,7 +262,11 @@ class Light extends Component {
     console.log('data:', data);
     return fetch(url, {
       method: 'PUT',
-      headers: { 'X-UIDC-Authorization-Token': this.state.access_token },
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-UIDC-Authorization-Token': this.state.access_token
+      },
       body: JSON.stringify({ ...data })
     })
       .then(response => response.json())
@@ -263,6 +280,7 @@ class Light extends Component {
   }
 
   render() {
+    console.log('state:', this.state);
     return (
       <View>
         <ActivityIndicator animating={this.state.isLoading} />
