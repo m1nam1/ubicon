@@ -9,7 +9,6 @@ import {
   Alert,
   ToastAndroid
 } from 'react-native';
-import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { MKButton, MKColor } from 'react-native-material-kit';
 

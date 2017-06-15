@@ -8,7 +8,6 @@ import { createLogger } from 'redux-logger';
 
 const RouterWithRedux = connect()(Router);
 import rootReducer from '../reducers';
-import Home from '../containers/Home';
 import Room from '../containers/Room';
 import DeviceList from '../containers/DeviceList';
 import Device from '../containers/Device';
