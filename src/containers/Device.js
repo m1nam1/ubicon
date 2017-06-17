@@ -246,11 +246,7 @@ class Light extends Component {
     console.log('url:', url);
     return fetch(url, {
       method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-UIDC-Authorization-Token': access_token
-      }
+      headers: { 'X-UIDC-Authorization-Token': access_token }
     })
       .then(response => response.json())
       .then(json => {
